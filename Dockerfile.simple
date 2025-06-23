@@ -1,8 +1,8 @@
-# Dockerfile pour Laravel sur Render
+# Dockerfile simplifié pour Laravel sur Render
 
 FROM php:8.2-fpm
 
-# Installer les dépendances système
+# Installer les dépendances système essentielles
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -16,7 +16,6 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     nginx \
     supervisor \
-    netcat-openbsd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

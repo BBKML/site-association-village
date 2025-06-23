@@ -4,7 +4,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./Dockerfile.simple
     healthCheckPath: /
     envVars:
       - key: APP_ENV
@@ -28,9 +28,9 @@ services:
       - key: DB_PORT
         value: 3306
       - key: DB_DATABASE
-        sync: false
+        value: village_association
       - key: DB_USERNAME
-        sync: false
+        value: root
       - key: DB_PASSWORD
         sync: false
       - key: BROADCAST_DRIVER
