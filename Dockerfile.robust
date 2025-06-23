@@ -1,4 +1,4 @@
-# Dockerfile pour Laravel sur Render
+# Dockerfile robuste pour Laravel sur Render
 
 FROM php:8.2-fpm
 
@@ -16,13 +16,15 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     nginx \
     supervisor \
-    netcat-openbsd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Installer Node.js 20 et npm
+# Installer Node.js 20 de manière plus robuste
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Installer les extensions PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -40,8 +42,11 @@ COPY . .
 # Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Installer les dépendances Node.js et construire les assets
-RUN if [ -f "package.json" ]; then npm install && npm run build; fi
+# Installer les dépendances Node.js et construire les assets (avec gestion d'erreur)
+RUN if [ -f "package.json" ]; then \
+        npm install --no-audit --no-fund && \
+        npm run build; \
+    fi
 
 # Créer le fichier .env s'il n'existe pas
 RUN if [ ! -f ".env" ]; then cp .env.example .env; fi
