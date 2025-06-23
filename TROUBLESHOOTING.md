@@ -2,6 +2,51 @@
 
 Ce guide vous aide à résoudre les problèmes courants lors du déploiement sur Render.
 
+## ❌ Erreur "npm: not found"
+
+### Problème
+```
+/bin/sh: 1: npm: not found
+error: failed to solve: process "/bin/sh -c if [ -f \"package.json\"]; then npm install && npm run build; fi" did not complete successfully: exit code: 127
+```
+
+### Solutions
+
+#### Solution 1: Utiliser Dockerfile.simple (Recommandé)
+Le fichier `Dockerfile.simple` inclut Node.js et npm.
+
+1. Dans votre `render.yaml`, assurez-vous d'utiliser :
+   ```yaml
+   dockerfilePath: ./Dockerfile.simple
+   ```
+
+2. Le Dockerfile.simple installe automatiquement Node.js :
+   ```dockerfile
+   # Installer Node.js et npm
+   RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+       && apt-get install -y nodejs \
+       && npm install -g npm@latest
+   ```
+
+#### Solution 2: Pré-compiler localement
+Si vous préférez une image plus légère :
+
+1. Installez Node.js localement
+2. Exécutez le script de build :
+   ```bash
+   ./build-assets.sh
+   ```
+3. Commitez les assets compilés
+4. Utilisez `Dockerfile.production`
+
+#### Solution 3: Supprimer l'étape npm
+Si vous n'utilisez pas d'assets compilés :
+
+```dockerfile
+# Commenter ou supprimer cette ligne
+# RUN if [ -f "package.json" ]; then npm install && npm run build; fi
+```
+
 ## ❌ Erreur "failed to solve: process did not complete successfully"
 
 ### Problème
