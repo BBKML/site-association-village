@@ -20,6 +20,11 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Installer Node.js et npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest
+
 # Installer les extensions PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
@@ -36,7 +41,7 @@ COPY . .
 # Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Installer les dépendances Node.js si nécessaire
+# Installer les dépendances Node.js et construire les assets
 RUN if [ -f "package.json" ]; then npm install && npm run build; fi
 
 # Créer le fichier .env s'il n'existe pas
