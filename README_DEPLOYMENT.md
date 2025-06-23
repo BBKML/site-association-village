@@ -46,9 +46,9 @@ APP_URL=https://votre-app.onrender.com
 DB_CONNECTION=mysql
 DB_HOST=votre-host-mysql
 DB_PORT=3306
-DB_DATABASE=votre-nom-bd
-DB_USERNAME=votre-utilisateur
-DB_PASSWORD=votre-mot-de-passe
+DB_DATABASE=village_association
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
 ### Optionnelles
